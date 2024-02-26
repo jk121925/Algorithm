@@ -18,18 +18,15 @@ ans =0
 def dfs(r,c,now):
     global R,C
     global ans
-    if visit[ord(arr[r][c])-65] == True:
-        ans = max(ans,now)
-        return
-    else:
-        visit[ord(arr[r][c])-65] = True
-        for i in range(4):
-            nr = r + dx[i]
-            nc = c + dy[i]
-            if nr >=0 and nr <R and nc >=0 and nc <C: 
-                dfs(nr,nc,now+1)
-        visit[ord(arr[r][c])-65] = False
+    ans = max(ans,now)
+    for i in range(4):
+        nr = r + dx[i]
+        nc = c + dy[i]
+        if nr >=0 and nr <R and nc >=0 and nc <C and not visit[ord(arr[nr][nc]) -ord('A')]: 
+            visit[ord(arr[nr][nc])-ord('A')] = True
+            dfs(nr,nc,now+1)
+            visit[ord(arr[nr][nc])-ord('A')] = False
 
-
+visit[ord(arr[0][0])-ord('A')] = True
 dfs(0,0,0)
-print(ans)
+print(ans+1)
