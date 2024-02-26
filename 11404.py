@@ -27,6 +27,10 @@ for k in range(v):
         for j in range(v):
             if dist[i][k] + dist[k][j] < dist[i][j]:
                 dist[i][j] = dist[i][k] + dist[k][j]
-
+ans =""
 for d in dist:
-    print(*d, sep=" ")
+    for di in d:
+        ans += str(di) + " "
+    ans.strip()
+    ans += "\n"
+print(ans.strip())
