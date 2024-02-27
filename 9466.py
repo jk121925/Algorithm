@@ -10,16 +10,18 @@ def travel(x):
     visit = [0 for _ in range(n+1)]
     visit[x] = 1
     i = parent[x]
+    ret = [x]
     while True:
         if visit[i] == 1:
             if i == x:
-                return True  
+                return ret 
             else:
                 break
         visit[i] =1
+        ret.append(i)
         i = parent[i]
         
-    return False
+    return []
     
 
 def union(a,b):
@@ -35,7 +37,12 @@ for _ in range(TC):
     ans = 0
     for index, vector in enumerate(l):
         union(index+1,vector)
-    for i in range(1,len(parent)):
-        if not travel(i):
-            ans +=1
-    print(ans)
+    global_visit = [0 for _ in range(n+1)]
+    for i in range(1,n+1):
+        if global_visit[i] == 0:
+            ret_list = travel(i)
+            if ret_list:
+                ans +=len(ret_list)
+                for r in ret_list:
+                    global_visit[r] = 1
+    print(n-ans)
