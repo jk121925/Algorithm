@@ -28,10 +28,10 @@ for _ in range(TC):
             dfs(i)
     print(ans)   
 
-T = int(input())
+T = int(input.readline())
 for _ in range(T):
-    N = int(input())
-    selected = [0] + list(map(int, input().split()))
+    N = int(input.readline())
+    selected = [0] + list(map(int, input.readline().split()))
 
     visited = [False] * (N+1)
     team_mems = 0
