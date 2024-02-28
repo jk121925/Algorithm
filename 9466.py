@@ -2,19 +2,17 @@ import sys
 input = sys.stdin
 
 def dfs(x):
-    global n
-    visit = [False for _ in range(n+1)]
-    s = [x]
-    ret =[]
-    while True:
-        now = s.pop(-1)
-        if visit[now]:
-            break
-        visit[now] = True
-        ret.append(now)
-        if x == parent[now]:
-            return ret
-        s.append(parent[now])
+    global ans
+    visit.append(x)
+    print(visit)
+    global_visit[x] = True
+    next = parent[x]
+    if global_visit[next]:
+        if next in visit:
+            ans -= len(visit[visit.index(next):])
+            return
+    else:
+        dfs(next)
 
         
 
@@ -26,13 +24,9 @@ for _ in range(TC):
     global_visit = [False for _ in range(n+1)]
     for i in range(1,n+1):
         if not global_visit[i]:
-            ret = dfs(i)
-            if ret:
-                print(ret)
-                ans -=len(ret)
-                for r in ret:
-                    global_visit[r] = True
-    print(ans)  
+            visit = []
+            dfs(i)
+    print(ans)   
     
     
 
