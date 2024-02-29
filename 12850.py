@@ -2,48 +2,36 @@ import sys
 
 n = int(sys.stdin.readline())
 mod = 1000000007
-dic = {i : [] for i in range(9)}
 
-dic[0].append(1)
-dic[0].append(2)
-dic[1].append(0)
-dic[1].append(3)
-dic[1].append(2)
-dic[2].append(0)
-dic[2].append(1)
-dic[2].append(3)
-dic[2].append(4)
-dic[3].append(1)
-dic[3].append(2)
-dic[3].append(4)
-dic[3].append(6)
-dic[3].append(5)
-dic[4].append(3)
-dic[4].append(2)
-dic[4].append(6)
-dic[5].append(3)
-dic[5].append(6)
-dic[5].append(7)
-dic[6].append(4)
-dic[6].append(3)
-dic[6].append(5)
-dic[6].append(8)
-dic[7].append(5)
-dic[7].append(8)
-dic[8].append(7)
-dic[8].append(6)
+v = [
+    [0,1,1,0,0,0,0,0],
+    [1,0,1,1,0,0,0,0],
+    [1,1,0,1,1,0,0,0],
+    [0,1,1,0,1,1,0,0],
+    [0,0,1,1,0,1,0,1],
+    [0,0,0,1,1,0,1,0],
+    [0,0,0,0,0,1,0,1],
+    [0,0,0,0,1,0,1,0,]
+]
 
+def multiple(v1,v2):
+    retans = [[0 for i in range(8)] for _ in range(8)]
+    for i in range(len(v1)):
+        for j in range(len(v2)):
+            for k in range(8):
+                retans[i][j] += v1[i][k] * v2[k][j]
+                retans[i][j] %= mod
+            retans[i][j] %= mod
+    return retans
+    # return[[sum(v1[i][k] * v2[k][j] % mod for k in range(8)) % mod for j in range(8)] for i in range(8)]
 
-dp = [[0 for i in range(n+1)] for i in range(9)]
-for d in dic[0]:
-    dp[d][1] = 1
-# print(*dp, sep="\n")
-for i in range(2,n+1):
-    for j in range(9):
-        temp = 0
-        for d in dic[j]:
-            if dp[d][i-1] !=0:
-                temp += dp[d][i-1] %mod
-        dp[j][i] = temp % mod
-# print()
-print(dp[0][-1])
+ans =[[0] * 8 for _ in range(8)]
+for i in range(8):
+    ans[i][i] = 1
+while n >0:
+    if n%2 != 0:
+        ans = multiple(ans,v)
+        n  -= 1
+    v = multiple(v,v)
+    n//=2
+print(ans[0][0])
