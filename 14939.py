@@ -18,6 +18,7 @@ def change(x,y,sboard):
             if sboard[p[0]][p[1]] == "O":
                sboard[p[0]][p[1]] = "#"
             else:
+                
                 sboard[p[0]][p[1]] = "O"
     return sboard
 ans = 1e9
@@ -26,15 +27,12 @@ def btn_click(s):
     global ans
     sub_ans = 0
     sub_board = copy.deepcopy(board)
-    bi = bin(s)[2:].zfill(10)
+
     for i in range(10):
-        if bi[i] == '1':
-            if sub_board[0][i] == "O":
-                sub_board[0][i] = "#"
-            else:
-                sub_board[0][i] = "O"
-    if s == 1023:
-        print(*sub_board,sep="\n")
+        if s & (1<<i):
+            sub_ans+=1
+            sub_board = change(0,i,sub_board)
+        
     for i in range(1,10):
         for j in range(10):
             if sub_board[i-1][j] == "O":
