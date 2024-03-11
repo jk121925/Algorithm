@@ -11,7 +11,7 @@ def solve(queue):
     innerqueue = copy.deepcopy(queue)
     stage = []
     for q in innerqueue:
-        if q[0] in key or q[0] == '.' or q[0] == '$':
+        if q[0] in key or q[0] == '.' or q[0] == '$' or q[0].islower():
             stage.append(q)
             visit[q[1]][q[2]] = True
     # print("stage", stage)
@@ -37,9 +37,9 @@ def solve(queue):
                         if point not in key:
                             key.append(point)
                             stage.append((point,nextx,nexty))
-                            for q in range(len(innerqueue)-1,-1,-1):
-                                if innerqueue[q][0].lower() in key:
-                                    stage.append(innerqueue.pop(q))
+                            # for q in range(len(innerqueue)-1,-1,-1):
+                            #     if innerqueue[q][0].lower() in key:
+                            #         stage.append(innerqueue.pop(q))
                         else:
                             stage.append((point,nextx,nexty))
                     elif point.isupper():
@@ -47,6 +47,9 @@ def solve(queue):
                             stage.append((point,nextx,nexty))
                         else:
                             innerqueue.append((point,nextx,nexty))
+            for q in range(len(innerqueue)-1,-1,-1):
+                if innerqueue[q][0].lower() in key:
+                    stage.append(innerqueue.pop(q))
         # print(stage)
     return ans
 
