@@ -1,26 +1,30 @@
+
 import sys
 input = sys.stdin.readline
 tc = int(input())
 
 
-def solve(start):
-    global end
+def solve():
+    global N
     q= []
+    sumcost = [0 for i in range(N+1)]
     visit = [False for i in range(N+1)]
-    ans =[]
-    ans.append(icost[start])
-    q.append(start)
+    for i in range(1,N+1):
+        if degree[i] == 0:
+            sumcost[i] = cost[i]
+            visit[i] = True
+            q.append(i)
+    # print(sumcost)
     while q:
         now = q.pop(0)
-        if now == end:
-            break
-        sub = dic[now]
-        sub = sorted(sub, key=lambda x : -x[1])
-        if sub:
-            visit[sub[0][0]] = True
-            q.append(sub[0][0])
-            ans.append(sub[0])
-    return ans
+        for d in dic[now]:
+            degree[d] -= 1
+            sumcost[d] = max(sumcost[d] ,sumcost[now] + cost[d])
+            if degree[d] == 0:
+                q.append(d)
+                visit[d] = True
+        # print(sumcost)
+    return sumcost
 
 for _ in range(tc):
     N, K = map(int, input().split(" "))
@@ -33,11 +37,8 @@ for _ in range(tc):
     degree = [0 for i in range(N+1)]
     for i in range(K):
         a,b = map(int, input().split(" "))
-        dic[a].append(icost[b])
+        dic[a].append(b)
         degree[b] +=1
     end = int(input())
-    for i in range(1,N+1):
-        if degree[i] == 0:
-            temp = solve(i)
-            ans = min(ans,sum([t[1] for t in temp]))
-    print(ans)
+    temp = solve()
+    print(temp[end])
