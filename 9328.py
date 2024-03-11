@@ -13,6 +13,7 @@ def solve(queue):
     for q in innerqueue:
         if q[0] in key or q[0] == '.' or q[0] == '$':
             stage.append(q)
+            visit[q[1]][q[2]] = True
     # print("stage", stage)
     while stage:
         now = stage.pop(0)
