@@ -11,13 +11,15 @@ def solve(queue):
     innerqueue = copy.deepcopy(queue)
     stage = []
     for q in innerqueue:
-        if q[0] in key or q[0] == '.' or q[0] == '$' or q[0].islower():
+        if q[0].lower() in key or q[0] == '.' or q[0] == '$' or q[0].islower():
             if q[0].islower():
                 key.append(q[0])
             stage.append(q)
             visit[q[1]][q[2]] = True
+    # print("stage", stage)
     while stage:
         now = stage.pop(0)
+        # print(now,stage)
         if now[0] == '$':
             ans +=1
         visit[now[1]][now[2]] = True
@@ -47,10 +49,11 @@ def solve(queue):
                             stage.append((point,nextx,nexty))
                         else:
                             innerqueue.append((point,nextx,nexty))
+        # print(key)
         for q in range(len(innerqueue)-1,-1,-1):
             if innerqueue[q][0].lower() in key:
                 stage.append(innerqueue.pop(q))
-
+        # print(stage)
     return ans
 
 
@@ -73,6 +76,9 @@ for _ in range(tc):
             if board_add[C-1] != '*':
                 starting.append((board_add[C-1],r,C-1))
         board.append(board_add)
-
+    # print(*board,sep="\n")
+    # print(target)
     key = list(input().strip())
+    # print(key)
+    # print(starting)
     print(solve(starting))
