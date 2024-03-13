@@ -28,8 +28,11 @@ for i in range(len(l)):
         ans[id] = dp[i]
     length = max(length,dp[i][1])
 ret = ""
-for i in range(len(l)-1,-1,-1):
+print(length)
+i = len(l)-1
+while i!=-1 and length!=-1:
     if length == dp[i][1]:
         ret = " " + str(dp[i][0]) + ret
         length-=1
+    i-=1
 print(ret.strip())
