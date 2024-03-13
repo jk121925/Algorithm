@@ -7,32 +7,31 @@ l = list(map(int, input().split(" ")))
 def lower_bound(s,e,target):
     while s<e:
         mid = int((e+s)/2)
-        if ans[mid][0] <target:
+        if dp[mid] <target:
             s = mid+1
         else:
             e = mid
     return s
 
 length = 0
-dp =[[l[i],1] for i in range(len(l))]
-ans=[]
-for i in range(len(l)):
-    if not ans:
-        ans.append(dp[i])
-    elif l[i] > ans[-1][0]:
-        dp[i][1] = ans[-1][1]+1
-        ans.append(dp[i])
+dp = [-1000000000]
+store =[]
+for t in l:
+    if t > dp[-1]:
+        dp.append(t)
+        store.append((len(dp)-1,t))
     else:
-        id = lower_bound(0,len(ans)-1,l[i])
-        dp[i][1] = ans[id][1]
-        ans[id] = dp[i]
-    length = max(length,dp[i][1])
-ret = ""
+        index = lower_bound(0,len(dp)-1,t)
+        dp[index] = t
+        store.append((index,t))
+
+
+length = len(dp)-1
+ret =[]
 print(length)
-i = len(l)-1
-while i!=-1 and length!=-1:
-    if length == dp[i][1]:
-        ret = " " + str(dp[i][0]) + ret
+for i in range(len(l)-1,-1,-1):
+    if length == store[i][0]:
+        ret.append(store[i][1])
         length-=1
-    i-=1
-print(ret.strip())
+
+print(*ret[::-1],sep=" ")
