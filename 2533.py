@@ -30,7 +30,8 @@ def solve(s):
             dp[0][s] += min(dp[1][d], dp[0][d])
             dp[1][s] += dp[0][s]
 
-print(solve())
+solve(1)
+print(min(dp[0][n-1], dp[1][n-1]))
 
 
 
