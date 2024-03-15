@@ -1,4 +1,5 @@
 import sys
+import copy
 input = sys.stdin.readline
 
 n,a,b = map(int, input().split(" "))
@@ -43,17 +44,6 @@ def bfs(s,group):
                     num+=1
     # print(dic[group])
     dic[group] //=num
-    
-        
-# g=0
-# for i in range(n):
-#     for j in range(n):
-#         if visit[i][j] == -1:
-#             if check4((i,j)):
-#                 bfs((i,j),g)
-#                 g+=1
-#             else:
-#                 q.append((i,j))
 
 
 def update():
@@ -63,32 +53,33 @@ def update():
                 city[i][j] = dic[visit[i][j]]
 
 ans =0
-flag = False
 while True:
     g = 0 
-    
+    flag=False
+    innerqueue = copy.deepcopy(q)
     visit =[[-1 for i in range(n)] for i in range(n)]
     dic = {i:0 for i in range(n**2)}
-    qlen = len(q)
-    for qq in q:
+    for qq in innerqueue:
         if visit[qq[0]][qq[1]] == -1 and check4(qq):
             bfs(qq,g)
             g+=1
-    for idx in range(len(q)-1,-1,-1):
+    for idx in range(len(innerqueue)-1,-1,-1):
         target = q[idx]
         if visit[target[0]][target[1]] !=-1:
             flag = True
             city[target[0]][target[1]] = dic[visit[target[0]][target[1]]]
-            q.remove(target)
+            innerqueue.remove(target)
+    ans+=1
     for i in range(n):
         for j in range(n):
             if check4((i,j)):
-                q.append((i,j))
-    if len(q) == qlen:
+                flag = True
+
+    if flag:
+        continue
+    else:
         break
-    # print(*visit,sep="\n")
-    # print(dic)
-    # print(*city, sep="\n")
-    # print(q)
-    ans+=1
+    
+    
+    
 print(ans)
