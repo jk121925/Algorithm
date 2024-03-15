@@ -6,18 +6,17 @@ def dist(a,b):
 
 def solve(index,num):
     global M,ret
-    if num == M:
-        local_sum =0
-        for i in range(len(checken_house)):
-            if alive[i]:
-                local_sum += chichen_dist[i]
+    if num == len(checken_house)-M:
+        local_sum =0 
+        for i in range(len(house)):
+            local_sum += min(num for cond, num in zip(alive,dp[i]) if cond)
         ret = min(ret,local_sum)
         return 
     else:
         for i in range(index,len(checken_house)):
             if alive[i]:
                 alive[i] = False
-                solve(index+1,num-1)
+                solve(i+1,num+1)
                 alive[i] = True
     return
 
@@ -36,12 +35,11 @@ for i in range(N):
             house.append((i,j))
 
 alive = [True for _ in range(len(checken_house))]
-chichen_dist = [0 for i in range(len(checken_house))]
+dp = [[0 for _ in range(len(checken_house))] for _ in range(len(house))]
 
-for ch in range(len(checken_house)):
-    dist_ = 0
-    for h in house:
-        dist_ += dist(h,checken_house[ch])
-    chichen_dist[ch] = dist_
-solve(0,len(checken_house))
+for j in range(len(house)):
+    for i in range(len(checken_house)):
+        dp[j][i] = dist(checken_house[i],house[j])
+
+solve(0,0)
 print(ret)
