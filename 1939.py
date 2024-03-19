@@ -21,10 +21,9 @@ def solve(start):
     while q:
         now = heapq.heappop(q)
         for d in dic[now[1]]:
-            if dist[d[1]] < d[0]:
-                dist[d[1]] = d[0]
+            if dist[d[1]] < d[0] or dist[d[1]] < dist[now[1]]:
+                dist[d[1]] = max(d[0],dist[now[0]])
                 heapq.heappush(q,d)
 
-    
-    return max(dist)
-print(solve(start))
+    return dist
+print(solve(start)[end])
