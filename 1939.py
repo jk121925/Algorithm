@@ -13,34 +13,32 @@ for i in range(m):
 
 start,end = map(int, input().split(" "))
 
-def solve():
-    global n,m
-    s = 0
-    e = 1000000000
-    while s<=e:
-        mid = (s+e)//2
-        if bfs(mid):
-            e = mid-1
-        else:
-            s = mid+1
-    return s
 
 def bfs(value):
     global n,m,start,end
     q = Queue()
-    q.put((0,start))
+    q.put(start)
     visit = [False for i in range(n+1)]
     visit[start] = True
     while not q.empty():
         now = q.get()
-        if now[1] == end:
-            return True
-        for d in dic[now[1]]:
-            if d[0] <= value:
-                q.put(d)
-                visit[d[1]] =True
-            else:
-                return False
-    return False        
+        for cost,next in dic[now]:
+            if not visit[next] and cost >= value:
+                q.put(next)
+                visit[next] =True
+    if visit[end]:
+        return True
+    else:
+        return False        
 
-print(solve())
+s = 1
+e = 1000000000
+ret = 0
+while s<=e:
+    mid = (s+e)//2
+    if bfs(mid):
+        ret = mid
+        s = mid+1
+    else:
+        e = mid-1
+print(ret)
