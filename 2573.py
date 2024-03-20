@@ -1,26 +1,19 @@
 import sys
 from queue import Queue
-# 5 7
-# 0 0 0 0 0 0 0
-# 0 2 4 5 3 0 0
-# 0 3 0 2 5 2 0
-# 0 7 6 2 4 0 0
-# 0 0 0 0 0 0 0
-
 input = sys.stdin.readline
 
-n,m = map(int,input().split(" "))
+n,m = map(int, input().split(" "))
 board = [list(map(int,input().split(" "))) for i in range(n)]
-
-q= []
+island = []
 for i in range(n):
     for j in range(m):
         if board[i][j] !=0:
-            q.append((i,j))
+            island.append((i,j))
 
-q.sort()
-dx = [0,0,1,-1]
-dy = [1,-1,0,0]
+
+
+dx =[0,0,1,-1]
+dy =[1,-1,0,0]
 def resolve(x,y):
     ret = 0
     for i in range(4):
@@ -29,74 +22,41 @@ def resolve(x,y):
             ret+=1
     return ret
 
-def bfs(s):
-    local_q = Queue()
-    local_q.put(s)
-    ret = 1
-    visit[s[0]][s[1]] = True
-    while not local_q.empty():
-        now = local_q.get()
+def dfs(s):
+    inner_island = []
+    inner_island.append(s)
+    inner_q = Queue()
+    inner_q.put(s)
+    while not inner_q.empty():
+        now = inner_q.get()
         for i in range(4):
-            x,y = now[0] +dx[i], now[1] +dy[i]
-            if 0<=x<n and 0<=y<m and not visit[x][y] and board[x][y] !=0:
-                visit[x][y] = True
-                ret+=1
-                local_q.put((x,y))
-    return ret
-year =1
-
+            x,y = now[0] +dx[i], now[1] + dy[i]
+            if 0<=x<n and 0<=y<m and (x,y) not in inner_island and board[x][y] !=0:
+                inner_island.append((x,y))
+                inner_q.put((x,y))
+        # print(inner_island)
+    return len(inner_island)
+year =0
 while True:
     flag = True
-    visit = [[False for i in range(m)] for i in range(n)]
-    for qq in q:
-        if board[qq[0]][qq[1]] !=0 and visit[qq[0]][qq[1]] == 0:
-            temp_ = bfs((qq[0],qq[1]))
-            if temp_ < len(q):
-                flag = False
-                break
-
-    if not flag:
+    if len(island) == 0:
+        year = -1
         break
-            # group+=1
-    # for i in range(n):
-    #     for j in range(m):
-    #         if board[i][j] !=0 and visit[i][j] == 0:
-    #             bfs((i,j))
-    #             group+=1
-    q.sort()
-    eraseq = []
-    for i in range(len(q)-1,-1,-1):
-        rx,ry = q[i][0],q[i][1]
-        ch = resolve(rx,ry)
-        if board[rx][ry] -ch <=0:
-            eraseq.append((rx,ry))
+    if len(island) != dfs(island[0]):
+        break
+    erase = []
+    for i in island:
+        resolve_ret = resolve(i[0],i[1])
+        if board[i[0]][i[1]] - resolve_ret <=0:
+            erase.append(i)
         else:
-            board[rx][ry] -=ch
-    for ex,ey in eraseq:
-        board[ex][ey] = 0
-        q.remove((ex,ey))
-        
-    # print(*board,sep="\n")
-    # print()
-    for i in range(n):
-        for j in range(m):
-            if board[i][j] != 0:
-                flag = False
-
-
-    temp_sum =0 
-    for i in range(n):
-        temp_sum += sum(board[i])
-    if temp_sum == 0:
-        flag = True
+            board[i[0]][i[1]] -=resolve_ret
+    if len(erase) ==0:
+        year = -1
         break
 
-    if len(q) == n**2:
-        flag = True
-        break
-            
+    for e in erase:
+        board[e[0]][e[1]] = 0
+        island.remove(e)
     year+=1
-if flag:
-    print(-1)
-else:
-    print(year)
+print(year)
