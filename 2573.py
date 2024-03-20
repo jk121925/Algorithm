@@ -34,25 +34,24 @@ def dfs(s):
             if 0<=x<n and 0<=y<m and (x,y) not in inner_island and board[x][y] !=0:
                 inner_island.append((x,y))
                 inner_q.put((x,y))
-        # print(inner_island)
     return len(inner_island)
 year =0
 while True:
     flag = True
     if len(island) == 0:
-        year = -1
+        year = 0
         break
     if len(island) != dfs(island[0]):
         break
     erase = []
     for i in island:
         resolve_ret = resolve(i[0],i[1])
-        if board[i[0]][i[1]] - resolve_ret <=0:
+        if board[i[0]][i[1]]-resolve_ret <=0:
             erase.append(i)
         else:
-            board[i[0]][i[1]] -=resolve_ret
+            board[i[0]][i[1]]-=resolve_ret
     if len(erase) ==0:
-        year = -1
+        year = 0
         break
 
     for e in erase:
