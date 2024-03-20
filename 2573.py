@@ -45,11 +45,15 @@ flag = True
 while True:
     group = 0
     visit = [[False for i in range(m)] for i in range(n)]
-    for i in range(n):
-        for j in range(m):
-            if board[i][j] !=0 and visit[i][j] == 0:
-                bfs((i,j))
-                group+=1
+    for qq in q:
+        if board[qq[0]][qq[1]] !=0 and visit[qq[0]][qq[1]] == 0:
+            bfs((qq[0],qq[1]))
+            group+=1
+    # for i in range(n):
+    #     for j in range(m):
+    #         if board[i][j] !=0 and visit[i][j] == 0:
+    #             bfs((i,j))
+    #             group+=1
     q.sort()
     if group >= 2:
         break
@@ -72,12 +76,14 @@ while True:
             if board[i][j] != 0:
                 flag = False
 
+
     temp_sum =0 
     for i in range(n):
         temp_sum += sum(board[i])
     if temp_sum == 0:
         flag = True
         break
+
     if len(q) == n**2:
         flag = True
         break
