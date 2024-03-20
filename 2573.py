@@ -32,6 +32,7 @@ def resolve(x,y):
 def bfs(s):
     local_q = Queue()
     local_q.put(s)
+    ret = 1
     visit[s[0]][s[1]] = True
     while not local_q.empty():
         now = local_q.get()
@@ -39,24 +40,30 @@ def bfs(s):
             x,y = now[0] +dx[i], now[1] +dy[i]
             if 0<=x<n and 0<=y<m and not visit[x][y] and board[x][y] !=0:
                 visit[x][y] = True
+                ret+=1
                 local_q.put((x,y))
-year =0
-flag = True
+    return ret
+year =1
+
 while True:
-    group = 0
+    flag = True
     visit = [[False for i in range(m)] for i in range(n)]
     for qq in q:
         if board[qq[0]][qq[1]] !=0 and visit[qq[0]][qq[1]] == 0:
-            bfs((qq[0],qq[1]))
-            group+=1
+            temp_ = bfs((qq[0],qq[1]))
+            if temp_ < len(q):
+                flag = False
+                break
+
+    if not flag:
+        break
+            # group+=1
     # for i in range(n):
     #     for j in range(m):
     #         if board[i][j] !=0 and visit[i][j] == 0:
     #             bfs((i,j))
     #             group+=1
     q.sort()
-    if group >= 2:
-        break
     eraseq = []
     for i in range(len(q)-1,-1,-1):
         rx,ry = q[i][0],q[i][1]
@@ -93,4 +100,3 @@ if flag:
     print(-1)
 else:
     print(year)
-
