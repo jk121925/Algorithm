@@ -35,5 +35,9 @@ def update(start,end,node,key,value):
 
 for _ in range(m):
     s,e,key,value = map(int,input().split(" "))
-    print(sum(0,len(l)-1,1,s-1,e-1))
+    if e < s:
+        print(sum(0,len(l)-1,1,e-1,s-1))
+    else:
+        print(sum(0,len(l)-1,1,s-1,e-1))
     update(0,len(l),1,key-1, value-l[key-1])
+    # print(tree)
