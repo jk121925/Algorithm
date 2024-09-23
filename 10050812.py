@@ -110,33 +110,40 @@ try:
     cursor.execute("SELECT * FROM choice_relation")
     choice_relation = cursor.fetchall()
     choice_parent = {i:value for i,value in choice_relation}
-    print(choice_parent)
     while global_standard_pointer != global_comparsion_pointer:
         print("staret",global_standard_pointer,global_comparsion_pointer)
         print(choices[global_standard_pointer])
         print(choices[global_comparsion_pointer])
         temp_ans = input("y/n")
         if temp_ans == "y":
+            # union find로 더 작은 값에 parent를 부여
             parent= union(choice_parent,global_standard_pointer,global_comparsion_pointer)
-            cursor.execute(f"UPDATE choice_relation set parent={parent} WHERE index = {global_comparsion_pointer}")
+            # 학습을 위한 label값 업데이트
             cursor.execute(f"INSERT INTO choice_relation_vec (idx1,idx2,similarity) VALUES ({global_standard_pointer},{global_comparsion_pointer},{1})")
+            # union find관계 업데이트
+            cursor.execute(f"UPDATE choice_relation set parent={parent} WHERE index = {global_comparsion_pointer}")
+            # 부모 rank에 개수를 한개 추가(나중에 추천해줄때 사용하기 위해서)
             cursor.execute(f"UPDATE rank set depth = depth + 1 where index={parent}")
+            # 만약 중간에 같은 그룹이라고 판단이 된다면 이후 모든 값에 대해서는 같지 않음 (0)으로 처리
             while True:
-                cursor.execute(f"INSERT INTO choice_relation_vec (idx1,idx2,similarity) VALUES ({global_standard_pointer},{global_comparsion_pointer},{0})")
-                if global_comparsion_pointer == end_max:
-                    break
                 global_comparsion_pointer +=1
+                cursor.execute(f"INSERT INTO choice_relation_vec (idx1,idx2,similarity) VALUES ({global_standard_pointer},{global_comparsion_pointer},{0})")
+                if global_comparsion_pointer >= end_max:
+                    break
         else:
+            # 학습을 위한 label값 업데이트
             cursor.execute(f"INSERT INTO choice_relation_vec (idx1,idx2,similarity) VALUES ({global_standard_pointer},{global_comparsion_pointer},{0})")
-        # 포인터 변경: 비교하는 포인터가 마지막이거나, 유저가 yes를 누른 경우 다음 standar_pointer로 변경
-        if global_comparsion_pointer == end_max:
-            global_standard_pointer +=1
+        # 포인터 변경: 비교하는 포인터가 마지막이라면 다음 standard_pointer로 변경
+        if global_comparsion_pointer >= end_max:
+            global_standard_pointer += 1
             global_comparsion_pointer = global_standard_pointer + 1
         # 그렇지 않을 경우 comparsion_pointer만 변경
         else:
             global_comparsion_pointer+=1
+        # 포인터 업데이트
         cursor.execute(f"UPDATE choice_pointer set standard_pointer={global_standard_pointer},comparsion_pointer={global_comparsion_pointer}")
         connection.commit()
+        print(choice_parent)
         print(global_standard_pointer,global_comparsion_pointer)
 except Exception as e:
     print(e)
